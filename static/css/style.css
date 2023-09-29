@@ -1,0 +1,52 @@
+body,
+html {
+    margin: 0 auto;
+    background-color: #f3f4f6;
+}
+
+.container {
+    max-width: 800px;
+}
+
+.fs-5 {
+    font-size: 2rem !important;
+}
+
+.form-control.is-valid, .was-validated .form-control:valid,
+.form-control.is-invalid, .was-validated .form-control:invalid {
+    padding-right: .75rem;
+    background: none;
+}
+
+.shadow-sm {
+    box-shadow: transparent 0 0 0 0, transparent 0 0 0 0, rgba(0, 0, 0, .1) 0 1px 3px 0, rgba(0, 0, 0, .1) 0 1px 2px -1px !important;
+}
+
+iframe {
+    /* visibility: hidden; */
+    display: none;
+}
+
+.embed {
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    margin-top: 2rem;
+    margin-left: -20px;
+    z-index: 2;
+}
+
+.bi {
+    width: 1em;
+    height: 1em;
+    vertical-align: -.125em;
+    fill: currentcolor
+}
+
+.no-outline *:focus,
+.no-outline *:focus-visible {
+    outline: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}

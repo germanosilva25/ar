@@ -1,0 +1,104 @@
+.container.show-loader form {
+    pointer-events: none;
+    opacity: .5;
+}
+
+.ar-loader-container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1054;
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: visibility 0s ease-out 300ms, opacity 300ms ease-out;
+    -o-transition: visibility 0s ease-out 300ms, opacity 300ms ease-out;
+    transition: visibility 0s ease-out 300ms, opacity 300ms ease-out;
+}
+
+.ar-loader-container.hide,
+.container.hide-loader .ar-loader-container {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.ar-loader-container.show,
+.container.show-loader .ar-loader-container {
+    visibility: visible;
+    opacity: 1;
+}
+
+.ar-spinner {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+}
+
+.ar-loader {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 66px;
+    height: 66px;
+    -webkit-animation: ar-spin 2s linear infinite;
+            animation: ar-spin 2s linear infinite;
+}
+
+@-webkit-keyframes ar-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+    }
+}
+
+@keyframes ar-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+    }
+}
+
+.ar-loader-text {
+    position: absolute;
+}
+
+.ar-loader-text,
+.ar-message {
+    color: white;
+    font-size: 1rem;
+}
+
+.ar-message {
+    margin-top: 10px;
+}

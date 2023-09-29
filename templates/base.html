@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+{% from "macros/_flashing.html" import flash_messages %}
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Misteregis">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de AR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/ar-loader.css')}}">
+    <link rel="icon" type="image/png" href="{{url_for('static', filename='images/favicon-32x32.png')}}" sizes="32x32" />
+
+    {% block styles %}{% endblock %}
+</head>
+
+<body class="p-3 pb-0 no-outline">
+    <div class="container mt-4">
+        <span class="fw-lighter fs-5">Gerador de AR</span>
+
+        {{ flash_messages() }}
+
+        <div class="position-relative">
+            {% block content %}
+            {% endblock %}
+
+            <div id="loader">
+                <div class="spinner-container">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loader -->
+        <div class="ar-loader-container show">
+            <div class="ar-spinner">
+                <div class="ar-loader"></div>
+                <div class="ar-loader-text"></div>
+            </div>
+
+            <div class="ar-message"></div>
+        </div>
+    </div>
+
+    <!-- Modal contendo o erro -->
+    <div class="modal fade" tabindex="-1">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p class="m-0"></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{url_for('static', filename='js/ar-loader.js')}}"></script>
+
+    <script>
+        window.onload = loader.hide();
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>
