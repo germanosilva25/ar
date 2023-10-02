@@ -1,4 +1,4 @@
-.container.show-loader form {
+body.show-loader form {
     pointer-events: none;
     opacity: .5;
 }
@@ -38,7 +38,7 @@
 }
 
 .ar-loader-container.show,
-.container.show-loader .ar-loader-container {
+body.show-loader .ar-loader-container {
     visibility: visible;
     opacity: 1;
 }
