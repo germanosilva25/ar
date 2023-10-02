@@ -1,6 +1,4 @@
-import json
-
-from util import format_string_with_mask
+from utils.format_string_with_mask import format_string_with_mask
 
 
 class ResponseData():

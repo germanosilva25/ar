@@ -1,6 +1,4 @@
-import json
-
-import util
+from utils.cpf_cnpj import validate_document
 
 
 class FormData():
@@ -8,7 +6,7 @@ class FormData():
         _json = request_json
 
         self.cpfcnpj = _json.get('document')
-        self.valid = util.validate_document(self.cpfcnpj)
+        self.valid = validate_document(self.cpfcnpj)
         self.destinatario = f"{_json.get('name')} {_json.get('surname')}"
         self.numero = _json.get("number") if _json.get("number") != "" else 0
 
