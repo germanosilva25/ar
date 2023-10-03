@@ -10,14 +10,14 @@ class ResponseData():
 
     def _object_data(self):
         identifier = self.client_data.get("identificador")
-        object_acronym = self.data.get("sigla_objeto", "YY")
+        object_acronym = self.ar_data.get("sigla_objeto")
         object_number = str(self.ar_data.get("numero_objeto")).zfill(8)
         digit = self.calculate_verification_digit(object_number)
         object_number = f"{object_acronym}{object_number}{digit}BR"
 
         return {
             # number(4) - Código do cliente (a ser definido pelos Correios)
-            "client-code": self.ar_data.get("codigo_cliente", "ABC"),
+            "client-code": self.client_data.get("codigo_cliente"),
 
             # string(40) - Nome do cliente
             "client-name": self.data_return.get("nome"),

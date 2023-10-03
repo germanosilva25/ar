@@ -169,6 +169,8 @@ jsPDF.API.addRect = function(data) {
     const w = this.internal.pageSize.getWidth();
     const h = this.internal.pageSize.getHeight();
 
+    const datamatrix = `${data.objectNumberAA}${data.clientIdentifier}`;
+
     let x = (w - 210) / 2,
         y = (h - 91) / 2;
 
@@ -176,9 +178,9 @@ jsPDF.API.addRect = function(data) {
     this.rect(x, y, 210, 91);
 
     // Códigos de barras (imagem)
-    this.barCode('71937720', x + 28, y + 39.5, 25, 11);
+    this.barCode(data.zipCode, x + 28, y + 39.5, 25, 11);
     this.barCode(data.objectNumber, x + 14.5, y + 73, 56, 15);
-    this.barCode(`${data.objectNumberAA}YES`, x + 135.6, y + 10.5, 13.5, 13.5, { bcid: "datamatrix", padding: 4.5 }); // datamatrix code
+    this.barCode(datamatrix, x + 135.6, y + 10.5, 13.5, 13.5, { bcid: "datamatrix", padding: 4.5 }); // datamatrix code
     this.barCode(data.objectNumberAA, x + 89, y + 33, 73, 10, { bcid: "code39" });
 
     x += 10; y += .5;

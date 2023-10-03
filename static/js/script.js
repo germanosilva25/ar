@@ -84,20 +84,6 @@
 
                 loader_busy = true;
             }
-
-            // setTimeout(() => {
-            //     generateAr(data)
-            //         .then((msg) => {
-            //             form.classList.remove("was-validated");
-            //             form.reset();
-
-            //             alerty(msg);
-            //         })
-            //         .catch((msg) => error("Erro na requisição!", msg))
-            //         .finally(() => {
-            //             container.classList.remove("show-loader");
-            //         });
-            // }, 50);
         }, false)
     });
 })();

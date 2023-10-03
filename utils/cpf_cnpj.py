@@ -1,5 +1,6 @@
 import re
 
+
 def remove_non_numeric_characters(input_str):
     """
     Remove todos os caracteres não numéricos de uma string.

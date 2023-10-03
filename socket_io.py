@@ -91,53 +91,6 @@ def handle_send_data(data):
 
         emit("invalid document", (message), to=sid)
     else:
-        with open('response.json', 'r', encoding='utf-8') as file:
-            import json
-
-            response = json.load(file)
-            res = response.get("data")
-            # data = data.get("data")
-            loader(sid, "Preparando...")
-            socketio.sleep(.5)
-
-            response_data = ResponseData(res)
-            response_data = response_data.get_data()
-
-            # Remover
-            name = data.get("name")
-            surname = data.get("surname")
-            fullname = f"{name} {surname}"
-            response_data["recipient-data"] = data
-            response_data["recipient-data"]["name"] = fullname
-            response_data["recipient-data"]["zip-code"] = data.get("zipCode")
-            ###
-
-            text_ar = TextAR(response_data)
-
-            loader(sid, "Gerando AR...")
-            # socketio.sleep(1.5)
-
-            # # print(response_data.get_data())
-            # print(text_ar.generate())
-            # print(response_data)
-
-            if text_ar.generate():
-                loader(sid, "Enviando arquivo...")
-                # socketio.sleep(1.5)
-
-                data = {
-                    "data": response_data["recipient-data"],
-                    "header": ""
-                }
-                data = CaseConverter.convert_keys(response_data, CaseConverter.to_camel_case)
-
-                message = "Arquivo enviado com sucesso."
-
-                emit("success", (data, message))
-            else:
-                emit("error", ("Erro AR", "Ocorreu um erro na geração do AR!"), to=sid)
-
-        return
         json_data = json_model.get_data()
         response = include(json_data)
         data = response.get("data")
@@ -153,21 +106,34 @@ def handle_send_data(data):
             message = data.get("data").get("message")
             error = True
 
-        if error:
-            emit("error", ("Erro!", message), to=sid)
+        if error is None:
+            loader(sid, "Preparando...")
+            socketio.sleep(.5)
 
-        print(data.get("error"), data, data.get("message"))
-        # print(json_model.get_data())
-        # print(json_model.is_valid())
-        # # json_data = json_model.get_data()
-        # # response = include(json_data)
-        # # data = response.get("data")
-        # # print(data)
-        # socketio.sleep(2)
-        # loader(sid, "Nero")
-        # socketio.sleep(2)
-        # loader(sid, "Testing...", 37)
-        # # emit("loader", ("aaa", "bbb"), to=sid)
+            response_data = ResponseData(data)
+            response_data = response_data.get_data()
+
+            text_ar = TextAR(response_data)
+
+            loader(sid, "Gerando AR...")
+            socketio.sleep(.5)
+
+            if text_ar.generate():
+                loader(sid, "Enviando arquivo...")
+                socketio.sleep(.5)
+
+                # REMOVER
+                response_data["response"] = data.get("data", {})
+
+                data = CaseConverter.convert_keys(response_data, CaseConverter.to_camel_case)
+
+                message = "Arquivo enviado com sucesso."
+
+                emit("success", (data, message))
+            else:
+                emit("error", ("Erro AR", "Ocorreu um erro na geração do AR!"), to=sid)
+        else:
+            emit("error", ("Erro!", message), to=sid)
 
 @socketio.on("upload_request")
 def handle_upload_request(data):

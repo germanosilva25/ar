@@ -7,7 +7,10 @@ const center = (maxWidth) => ({ maxWidth, align: "center" });
 const timestamp = () => Math.round(+new Date() / 1000);
 const canvas = document.createElement("canvas");
 const container = document.querySelector(".container");
-const iframe = document.getElementById("print");
+const iframe = document.createElement("iframe");
+const form = document.forms[0];
+
+document.body.appendChild(iframe);
 
 /**
  * Adiciona um evento de carregamento a um elemento <iframe> para acionar a impressão de seu conteúdo.
@@ -35,7 +38,13 @@ const iframe = document.getElementById("print");
 iframe.addEventListener("load", function() {
     const win = this.contentWindow || this.contentDocument;
 
-    win.print();
+    if (this.src) {
+        win.print();
+
+        form.querySelectorAll("input").forEach((element) => element.classList.remove("is-valid", "is-invalid"));
+        form.classList.remove("was-validated");
+        form.reset();
+    }
 });
 
 /**
@@ -204,21 +213,19 @@ const randomRegistrationNumber = () => {
  * // O documento PDF é criado usando a biblioteca jsPDF e, em seguida, pode ser salvo em um arquivo ou visualizado no navegador.
  */
 const makePdf = (doc, data) => {
-    // data.objectNumber = randomRegistrationNumber();
-    // data.objectNumberAA = data.objectNumber.replace("BR", "AA");
-
     const { returnData: _ret, recipientData: _rec, objectData: _obj} = data;
     const { name: clientName } = _ret;
 
     const streetNumber = `${_ret.street}, ${_ret.number}`;
 
-    var data = { objectNumber } = _obj;
+    var data = _obj;
 
     data.objectNumberAA = data.objectNumber.replace("BR", "AA");
+    data.zipCode = _rec.zipCode.replace(/\D/g, "");
 
     doc.setDocumentProperties({
         title: "Aviso de Recebimento Digital",
-        // subject: "Aviso de Recebimento Digital",
+        subject: data.clientIdentifier,
         author: clientName,
         keywords: "ar, correios, digital",
         creator: "jsPDF"
@@ -243,6 +250,8 @@ const makePdf = (doc, data) => {
     const fullAddressMax = doc.getStringUnitWidth(fullAddress[0]);
     const fullAddressText = fullAddress.join(fullAddressMax < 20 ? `\n` : " — ");
     const fullAddressText2 = fullAddress.join(fullAddressMax < 25 ? `\n` : " — ");
+
+    const returnComplement = _ret.complement ? `${_ret.complement} — ` : ""
 
     let tx = x + 2.2;
 
@@ -273,7 +282,7 @@ const makePdf = (doc, data) => {
     // Palácio Araribóia - R. da Conceição, 100 - Centro, Niterói - RJ, 24020-084
     doc.addText(8, [
         clientName, //"Secretaria da Fazenda de Niterói",
-        `${_ret.complement} — ${streetNumber}`,//"Palácio Araribóia - R. da Conceição, 100",
+        `${returnComplement}${streetNumber}`,//"Palácio Araribóia - R. da Conceição, 100",
         `${_ret.zipCode} — ${_ret.neighborhood}, ${_ret.city} - ${_ret.state}`//"24020-084 - Centro, Niterói - RJ"
     ], tx, y + 59.8, max(60));
 
@@ -284,7 +293,7 @@ const makePdf = (doc, data) => {
     doc.addText(8, "AVISO DE", tx + 11.5, y + 5.5, {}, true, "Abandon");
     doc.addText(8, "RECEBIMENTO", tx + 11.5, y + 8, {}, false, "Abandon");
     doc.addText(15, "Digital", tx + 48, y + 8, {}, true);
-    doc.addText(18, "YES", tx + 99, y + 6.8, { align: "right" }, true);
+    doc.addText(18, data.clientIdentifier, tx + 99, y + 6.8, { align: "right" }, true);
     doc.addText(18, "MP", tx + 132, y + 6.8, { align: "right" }, true);
 
     doc.addText(8, "DESTINATÁRIO", tx, y + 13, max(60), true);
