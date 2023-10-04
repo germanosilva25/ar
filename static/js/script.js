@@ -1,3 +1,8 @@
+const lockScreen = (lock = false) => {
+    loader_busy = lock;
+
+    window.onbeforeunload = lock ? () => "Sair dessa página cancelará o envio do arquivo." : null;
+};
 
 (() => {
     'use strict'
@@ -82,7 +87,7 @@
 
                 socket.emit("send data", data);
 
-                loader_busy = true;
+                lockScreen(true);
             }
         }, false)
     });

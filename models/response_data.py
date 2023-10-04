@@ -69,6 +69,7 @@ class ResponseData():
 
     def get_data(self):
         return {
+            "client-acronym": self.client_data.get("identificador"),
             "return-data": self._return_data(),
             "object-data": self._object_data(),
             "recipient-data": self._recipient_data()

@@ -112,7 +112,7 @@ loader.hide = (force = false) => {
  * // Você pode chamar a função sem fornecer mensagem ou progresso para exibir apenas o indicador de carregamento.
  */
 loader.show = (message = "", progress = null) => {
-    const percents = progress ? `${progress}` : "";
+    const percents = progress != null ? `${progress}%` : "";
 
     document.body.classList.add("show-loader");
 

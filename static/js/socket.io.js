@@ -17,62 +17,24 @@ const error = (title, message) => {
 
 socket.on("connect", () => {
     loader.hide();
-    //hideLoader();
 
     console.log("Conectado ao servidor.");
 });
 
 socket.on("disconnect", () => {
     loader.show("Desconectado do servidor, reconectando...");
-    //showLoader();
 
     console.log("Desconectado do servidor.");
 
-    loader_busy = false;
+    lockScreen(false);
 });
-
-// socket.on("upload_progress", (data) => {
-//     const { progress } = data;
-
-//     loader_busy = true;
-
-//     loader.show("Enviando...", progress);
-//     //showLoader();
-//     window.onbeforeunload = (e) => e.preventDefault;
-
-//     console.log("Progresso de upload: " + progress + "%");
-// });
-
-// socket.on("upload_completed", () => {
-//     console.log("Arquivo enviado com sucesso!");
-//     //hideLoader();
-//     loader.show("Arquivo enviado com sucesso!", 100);
-
-//     window.onbeforeunload = null;
-
-//     setTimeout(loader.hide, 1000);
-
-//     loader_busy = false;
-// });
-
-// socket.on("loader", (message, progress) => {
-//     if (progress) progress += "%"
-
-//     loader.show(message, progress);
-// });
-
-// socket.on("upload_error", (data) => {
-//     const { title, message } = data;
-
-//     error(title, message);
-// });
 
 socket.on("error", error);
 
 socket.on("loader", (message, progress) => {
-    if (progress) progress += "%"
-
     loader.show(message, progress);
+
+    lockScreen(true);
 });
 
 socket.on("invalid document", (message = null) => {
@@ -91,11 +53,10 @@ socket.on("invalid document", (message = null) => {
 socket.on("success", (data, message) => {
     toast("Arquivo enviado!", message, "&check;", "success");
 
-    loader_busy = false;
+    lockScreen(false);
 
     loader.hide();
-    console.log(data);
-    // return
+
     let doc = new jsPDF("L");
 
     if (data instanceof Array) {

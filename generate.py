@@ -22,6 +22,7 @@ class TextAR:
         self.info = None
 
         if data is not None:
+            self.client_acronym = data.get("client-acronym")
             self.info = data.get("object-data")
 
             self._shipping = self.info.get("shipping")
@@ -46,7 +47,7 @@ class TextAR:
         self.set_text(8, 1, 1, 0)
 
         # Código do cliente (a ser definido pelos Correios)
-        self.set_text(self.info.get("client-code"), 2, 5, "X")
+        self.set_text(self.info.get("client-code"), 2, 5, 0)
 
         # Filler (preencher com zeros)
         self.set_text(0, 6, 20, 0)
@@ -78,7 +79,7 @@ class TextAR:
         self.set_text(9, 1, 1)
 
         # Código do cliente (a ser definido pelos Correios)
-        self.set_text(self.info.get("client-code"), 2, 5)
+        self.set_text(self.info.get("client-code"), 2, 5, 0)
 
         # Identificador do cliente (Literal fornecido pelos Correios)
         self.set_text(self.info.get("client-identifier"), 6, 13)
@@ -243,7 +244,7 @@ class TextAR:
 
     def set_filename(self):
         date = self.date.strftime("%d%m")
-        client_acronym = os.getenv("CLIENT_ACRONYM")
+        client_acronym = self.client_acronym
         sequential = self.info.get("shipping")
 
         return f"{client_acronym}1{date}{sequential}.SD1"
@@ -257,11 +258,13 @@ class TextAR:
         for detail in self._data:
             self._set_detail(detail)
 
-        try:
-            with open(f"ftp_files/{self.set_filename()}", "w", encoding="ANSI") as arquivo:
-                arquivo.write(self._txt)
+        file_path = f"ftp_files/{self.set_filename()}"
 
-            return True
+        try:
+            with open(file_path, "w", encoding="ANSI") as file:
+                file.write(self._txt)
+
+            return file_path
         except Exception as e:
             print(f"Erro ao salvar o arquivo: {e}")
 
