@@ -11,20 +11,18 @@ const error = (title, message) => {
     element.querySelector(".modal-title").innerHTML = title;
     element.querySelector(".modal-body p").innerHTML = message.replace(/\n/g, "<br/>");
 
+    lockScreen(false);
+
     loader.hide();
     modal.show();
 };
 
 socket.on("connect", () => {
     loader.hide();
-
-    console.log("Conectado ao servidor.");
 });
 
 socket.on("disconnect", () => {
     loader.show("Desconectado do servidor, reconectando...");
-
-    console.log("Desconectado do servidor.");
 
     lockScreen(false);
 });

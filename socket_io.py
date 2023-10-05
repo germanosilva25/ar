@@ -49,6 +49,10 @@ def ftp_upload_progress(client_id, file_path, data, callback):
             ftp_pass = os.getenv("FTP_SERVER_PASS")
             ftp_dir = os.getenv("FTP_SERVER_DIR")
 
+            # Adiciona uma barra (/) caso a variável 'ftp_dir' não termine com uma
+            if not ftp_dir.endswith("/"):
+                ftp_dir += "/"
+
             ftp = FTP(ftp_host, ftp_user, ftp_pass, timeout=_request_timeout)
 
             with tqdm(total=file_size, unit="B", unit_scale=True, desc=f"Enviando {filename}", leave=False) as pbar:
@@ -56,14 +60,10 @@ def ftp_upload_progress(client_id, file_path, data, callback):
 
             ftp.quit()
 
-            socketio.sleep(.4)
             socketio.emit("success", (data, "Arquivo enviado com sucesso."), to=client_id)
         except Exception as e:
             print(e)
-            socketio.emit("upload_error", {
-                "title": "Erro na conexão com o servidor FTP",
-                "message": e.__str__()
-            }, to=client_id)
+            socketio.emit("error", ("Erro na conexão com o servidor FTP", e.__str__()), to=client_id)
         finally:
             with cancel_lock:
                 if cancel_upload:

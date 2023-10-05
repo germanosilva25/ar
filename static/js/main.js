@@ -241,7 +241,6 @@ const makePdf = (doc, data) => {
 
     const zipCodeCityState = `${zipCode} ${city} - ${state}`;
     const address = [ street, number, complement ];
-    const fullName = `${name} ${surname}`;
     const fullAddress = [
         address.filter((addr) => addr).join(", "),
         neighborhood
@@ -274,7 +273,7 @@ const makePdf = (doc, data) => {
     doc.addText(6, [ toDay(), "Trebuchet MS 6"], tx + 16.5, y + 7.5, center(33));
 
     doc.addText(9, "DESTINATÁRIO", tx, y + 20, max(60), true);
-    doc.addText(9, [ fullName, fullAddressText ], tx, y + 24, max(60), true);
+    doc.addText(9, [ name, fullAddressText ], tx, y + 24, max(60), true);
 
     doc.addText(10, zipCodeCityState, tx, y + 36, max(60), true);
 
@@ -297,7 +296,7 @@ const makePdf = (doc, data) => {
     doc.addText(18, "MP", tx + 132, y + 6.8, { align: "right" }, true);
 
     doc.addText(8, "DESTINATÁRIO", tx, y + 13, max(60), true);
-    doc.addText(7, [ fullName, fullAddressText2 ], tx, y + 16, max(60));
+    doc.addText(7, [ name, fullAddressText2 ], tx, y + 16, max(60));
     doc.addText(7, zipCodeCityState, tx, y + 26, max(60), true);
     doc.addText(12, data.objectNumberAA, tx + 48.9, y + 32, center(100));
     doc.addText(7, "AR", tx + 88.3, y + 17, center(25), true);

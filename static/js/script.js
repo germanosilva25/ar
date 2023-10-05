@@ -10,9 +10,11 @@ const lockScreen = (lock = false) => {
     const forms = document.querySelectorAll(".needs-validation");
     const cpf_cnpj = document.getElementById("document");
 
-    cpf_cnpj.validateDocument = function() {
+    cpf_cnpj.validateDocument = function(event = null) {
         const validator = new DocumentValidator();
         const value = validator.removeNonNumericCharacters(this.value);
+
+        this.classList.remove("is-valid", "is-invalid");
 
         if (value.length == 11 || 14 == value.length) {
             const is_valid = validator.validateDocument(this.value);
@@ -28,9 +30,17 @@ const lockScreen = (lock = false) => {
                 return false;
             } else
                 this.setCustomValidityMessage();
+
+                return true;
         }
 
-        return true;
+        if (!value && event === null && !(event instanceof Event)) {
+            const label = this.nextElementSibling?.textContent.slice(1);
+
+            toast(label, this.validationMessage, null, "danger");
+        }
+
+        return false;
     };
 
     cpf_cnpj.addEventListener("input", cpf_cnpj.validateDocument);
@@ -38,6 +48,28 @@ const lockScreen = (lock = false) => {
     function resetInput() {
         if (this.validity.customError)
             this.setCustomValidityMessage();
+    }
+
+    function checkInvalidInputs() {
+        form.querySelectorAll("input:invalid").forEach((element, index) => {
+            if (element.id === cpf_cnpj.id) return;
+
+            const message = element.validationMessage;
+            const label = element.nextElementSibling?.textContent.slice(1);
+            const pattern = element.pattern ? "#pattern" : "";
+
+            if (index === 0) element.scrollToSelf(true);
+
+            toast(label, message, pattern, "danger");
+
+            if (!element._events) element._events = [];
+
+            if (!element._events.includes(resetInput)) {
+                element._events.push(resetInput);
+
+                element.addEventListener("input", resetInput);
+            }
+        });
     }
 
     Array.from(forms).forEach((form) => {
@@ -52,29 +84,8 @@ const lockScreen = (lock = false) => {
 
             form.classList.add("was-validated");
 
-            if (!form.checkValidity()) {
-                form.querySelectorAll("input:invalid").forEach((element, index) => {
-                    if (element.id === cpf_cnpj.id) return;
-
-                    const message = element.validationMessage;
-                    const label = element.nextElementSibling?.textContent.slice(1);
-                    const pattern = element.pattern ? "#pattern" : "";
-
-                    if (index === 0) element.scrollToSelf(true);
-
-                    toast(label, message, pattern, "danger");
-
-                    if (!element._events) element._events = [];
-
-                    if (!element._events.includes(resetInput)) {
-                        element._events.push(resetInput);
-
-                        element.addEventListener("input", resetInput);
-                    }
-                });
-
-                return;
-            }
+            if (!form.checkValidity())
+                return checkInvalidInputs();
 
             document.body.classList.add("show-loader");
 
